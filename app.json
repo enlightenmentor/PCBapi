@@ -1,7 +1,7 @@
 {
-  "name": "PC Build",
+  "name": "PCBapi",
   "description": "",
-  "repository": "https://github.com/enlightenmentor/pc-build",
+  "repository": "https://github.com/enlightenmentor/PCBapi.git",
   "logo": "https://cdn.rawgit.com/heroku/node-js-getting-started/master/public/node.svg",
   "keywords": ["node", "express", "heroku"],
   "image": "heroku/nodejs"
