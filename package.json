@@ -1,0 +1,29 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index",
+    "listen": "nodemon index",
+    "inspect": "node --inspect index",
+    "inspect-brk": "node --inspect-brk index"
+  },
+  "engines": {
+    "node": "9.2.0"
+  },
+  "author": "enlightenmentor",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/enlightenmentor/pc-build"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.17.1",
+    "body-parser": "^1.18.2",
+    "cors": "^2.8.4",
+    "express": "^4.16.2",
+    "mongoose": "^4.13.2",
+    "morgan": "^1.9.0"
+  }
+}
