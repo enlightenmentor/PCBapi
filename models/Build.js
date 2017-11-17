@@ -1,13 +1,12 @@
 const mongoose = require('mongoose');
 
 const buildSchema = new mongoose.Schema({
-  name: {
+  title: {
     type: String,
     required: true
   },
-  publicId: {
+  description: {
     type: String,
-    required: true
   },
   components: [{
     type: mongoose.Schema.Types.ObjectId,
