@@ -42,6 +42,7 @@ router.get('/', async (req, res) => {
 router.get('/:_id', async (req, res) => {
   try {
     const build = await Build.findById(req.params._id);
+    await Build.populate(build, { path: 'components' });
     res.send(build);
   } catch(err) {
     res.status(500).send({
