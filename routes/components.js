@@ -1,31 +1,35 @@
 const express = require('express');
 const router = express.Router();
+const admin = require('../modules/firebase-admin');
 const getCompInfo = require('../modules/get-comp-info');
 const Component = require('../models/Component');
 
 // Add new component
 router.post('/', async (req, res) => {
   try {
+    const authHeader = req.header('Authorization');
+    const user = await verifyUser(authHeader);
     const rId = req.body.rId;
-    const component = await Component.findOne({rId: rId});
+    const component = await Component.findOne({ rId: rId });
     if (component === null) {
       let compInfo = await getCompInfo(rId);
       let newComponent = new Component({
-        rId: component.id,
-        title: component.title,
-        type: component.parent_title,
-        producer: component.producer,
-        available: component.sell_status == 'available' ? true : false,
-        price: component.price
+        rId: compInfo.id,
+        title: compInfo.title,
+        type: compInfo.parent_title,
+        producer: compInfo.producer,
+        available: compInfo.sell_status == 'available' ? true : false,
+        price: compInfo.price
       });
       await newComponent.save();
       res.send({
-        success: true
+        success: true,
+        component: newComponent
       });
     } else {
       throw new Error('Component already exists!');
     }
-  } catch(err) {
+  } catch (err) {
     res.status(500).send({
       success: false,
       error: err.message
@@ -36,9 +40,11 @@ router.post('/', async (req, res) => {
 // Fetch all components
 router.get('/', async (req, res) => {
   try {
+    const authHeader = req.header('Authorization');
+    const user = await verifyUser(authHeader);
     const components = await Component.find({});
     res.send(components);
-  } catch(err) {
+  } catch (err) {
     res.status(500).send({
       success: false,
       error: err.message
@@ -46,12 +52,12 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Fetch single post
+// Fetch single component
 router.get('/:_id', async (req, res) => {
   try {
     const component = await Component.findById(req.params._id);
     res.send(component);
-  } catch(err) {
+  } catch (err) {
     res.status(500).send({
       success: false,
       error: err.message
@@ -59,19 +65,31 @@ router.get('/:_id', async (req, res) => {
   }
 })
 
-// Delete a post
+// Delete a component
 router.delete('/:_id', async (req, res) => {
   try {
-    await Component.remove({_id: req.params._id });
+    const authHeader = req.header('Authorization');
+    const user = await verifyUser(authHeader);
+    await Component.remove({ _id: req.params._id });
     res.send({
       success: true
     });
-  } catch(err) {
+  } catch (err) {
     res.status(500).send({
       success: false,
       error: err.message
     });
   }
 })
+
+async function verifyUser(authHeader) {
+  if (!authHeader)
+    throw new Error('You have no admin rights');
+  const token = authHeader.substr(7);
+  const user = await admin.auth().verifyIdToken(token);
+  if (!user)
+    throw new Error('You have no admin rights');
+  return user;
+}
 
 module.exports = router;

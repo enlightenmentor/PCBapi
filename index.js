@@ -3,6 +3,7 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const db = require('./modules/mongo-connection');
+const admin = require('./modules/firebase-admin');
 const components = require('./routes/components');
 const builds = require('./routes/builds');
 
